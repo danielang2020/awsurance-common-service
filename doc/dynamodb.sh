@@ -1,4 +1,4 @@
-aws dynamodb create-table --table-name RightTimeInfo \
+aws dynamodb create-table --table-name CommonInfo \
                           --key-schema AttributeName=pk,KeyType=HASH AttributeName=sk,KeyType=RANGE \
                           --attribute-definitions AttributeName=pk,AttributeType=S AttributeName=sk,AttributeType=S \
                           --endpoint-url http://localhost:4566 \

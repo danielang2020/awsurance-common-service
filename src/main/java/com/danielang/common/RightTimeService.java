@@ -1,6 +1,7 @@
 package com.danielang.common;
 
 import com.danielang.common.db.entity.RightTimeInfo;
+import com.danielang.common.utils.ResponseInfo;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
@@ -11,12 +12,12 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 @GrpcService
 public class RightTimeService implements RightTimeGrpc {
+	private static final String COMMON_INFO_TABLE = "CommonInfo";
 	private final DynamoDbTable<RightTimeInfo> rightTimeTable;
 
 	@Inject
 	public RightTimeService(DynamoDbEnhancedClient dynamoEnhancedClient) {
-		this.rightTimeTable = dynamoEnhancedClient.table("RightTimeInfo",
-				TableSchema.fromClass(RightTimeInfo.class));
+		this.rightTimeTable = dynamoEnhancedClient.table(COMMON_INFO_TABLE, TableSchema.fromClass(RightTimeInfo.class));
 	}
 
 	@Override
@@ -27,17 +28,11 @@ public class RightTimeService implements RightTimeGrpc {
 		RightTimeInfo item = rightTimeTable.getItem(key);
 
 		if (item == null) {
-			return Uni.createFrom().item(
-					RightTimeGetReply.newBuilder()
-							.setResponseCode("fail")
-							.build());
-		}else{
-			return Uni.createFrom().item(
-					RightTimeGetReply.newBuilder()
-							.setResponseCode("ok")
-							.setRightTime(item.getRightTime())
-							.setRightTimeZone(item.getRightTimeZone())
-							.build());
+			return Uni.createFrom()
+					.item(RightTimeGetReply.newBuilder().setResponseCode(ResponseInfo.NOT_FOUND).build());
+		} else {
+			return Uni.createFrom().item(RightTimeGetReply.newBuilder().setResponseCode(ResponseInfo.OK)
+					.setRightTime(item.getRightTime()).setRightTimeZone(item.getRightTimeZone()).build());
 		}
 	}
 
@@ -47,9 +42,6 @@ public class RightTimeService implements RightTimeGrpc {
 				request.getRightTimeZone());
 		rightTimeTable.updateItem(rightTime);
 
-		return Uni.createFrom().item(
-				RightTimeUpdateReply.newBuilder()
-						.setResponseCode("ok")
-						.build());
+		return Uni.createFrom().item(RightTimeUpdateReply.newBuilder().setResponseCode(ResponseInfo.OK).build());
 	}
 }

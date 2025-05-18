@@ -34,8 +34,6 @@ message RightTimeUpdateRequest {
 message RightTimeUpdateReply {
   string responseCode = 1; // response code
   repeated CommonResponseDetail details = 2; // response details
-  string rightTime = 3;
-  int32 rightTimeZone = 4;
 }
 
 message CommonResponseDetail{
