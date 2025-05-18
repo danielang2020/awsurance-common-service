@@ -5,6 +5,7 @@ import com.danielang.common.utils.ResponseInfo;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
@@ -12,7 +13,9 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 @GrpcService
 public class RightTimeService implements RightTimeGrpc {
-	private static final String COMMON_INFO_TABLE = "CommonInfo";
+	private static final Logger LOG = Logger.getLogger(RightTimeService.class);
+
+	public static final String COMMON_INFO_TABLE = "CommonInfo";
 	private final DynamoDbTable<RightTimeInfo> rightTimeTable;
 
 	@Inject
@@ -28,6 +31,7 @@ public class RightTimeService implements RightTimeGrpc {
 		RightTimeInfo item = rightTimeTable.getItem(key);
 
 		if (item == null) {
+			LOG.warn("RightTime not found for insuranceTenant: " + insuranceTenant + ", user: " + user);
 			return Uni.createFrom()
 					.item(RightTimeGetReply.newBuilder().setResponseCode(ResponseInfo.NOT_FOUND).build());
 		} else {
