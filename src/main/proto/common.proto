@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.danielang.common";
+option java_outer_classname = "RightTimeGrpcProto";
+
+package common;
+
+service RightTimeGrpc {
+  rpc GetRightTime (RightTimeGetRequest) returns (RightTimeGetReply) {}
+
+  rpc UpdateRightTime (RightTimeUpdateRequest) returns (RightTimeUpdateReply) {}
+}
+
+message RightTimeGetRequest {
+  string insuranceTenant = 1;
+  string user = 2;
+}
+
+message RightTimeGetReply {
+  string responseCode = 1; // response code
+  repeated CommonResponseDetail details = 2; // response details
+  string rightTime = 3;
+  int32 rightTimeZone = 4;
+}
+
+message RightTimeUpdateRequest {
+  string insuranceTenant = 1;
+  string user = 2;
+  string rightTime = 3;
+  int32 rightTimeZone = 4;
+}
+
+message RightTimeUpdateReply {
+  string responseCode = 1; // response code
+  repeated CommonResponseDetail details = 2; // response details
+  string rightTime = 3;
+  int32 rightTimeZone = 4;
+}
+
+message CommonResponseDetail{
+  string responseDetailKey = 1; // response code
+  string responseDetailValue = 2; // response message
+}
+
