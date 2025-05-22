@@ -12,16 +12,16 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  **/
 @RegisterForReflection
 @DynamoDbBean
-public class RightTimeInfo {
+public class RightTimeInfoEntity {
 	private String pk;
 	private String sk;
 	private String rightTime;
 	private int rightTimeZone;
 
-	public RightTimeInfo() {
+	public RightTimeInfoEntity() {
 	}
 
-	public RightTimeInfo(String pk, String sk, String rightTime, int rightTimeZone) {
+	public RightTimeInfoEntity(String pk, String sk, String rightTime, int rightTimeZone) {
 		this.pk = pk;
 		this.sk = sk;
 		this.rightTime = rightTime;
